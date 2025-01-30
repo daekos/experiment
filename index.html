@@ -71,6 +71,22 @@
             font-weight: bold;
             margin-top: 10px;
         }
+
+        #notification {
+            display: none;
+            margin-top: 20px;
+            font-size: 20px;
+            background-color: rgba(0, 255, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #achievementImage {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -97,6 +113,9 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <div id="notification">Цель достигнута!</div>
+        <img id="achievementImage" src="" alt="Достижение">
     </div>
 
     <script>
@@ -116,8 +135,17 @@
             nature: "images/nature.jpg"
         };
 
+        const achievementImages = {
+            real: "images/real-achievement.jpg",
+            book: "images/book-achievement.jpg",
+            myth: "images/myth-achievement.jpg",
+            space: "images/space-achievement.jpg",
+            nature: "images/nature-achievement.jpg"
+        };
+
         let currentCategory = "real";
         let stepCount = 0;
+        const stepGoal = 10000; // Цель для ежедневного достижения
 
         function setCategory(category) {
             currentCategory = category;
@@ -180,6 +208,11 @@
                     if (deltaX + deltaY + deltaZ > 2) { // Фильтр движений
                         stepCount++;
                         document.getElementById("steps").innerText = `Шагов: ${stepCount}`;
+
+                        // Проверяем, достигнута ли цель
+                        if (stepCount >= stepGoal) {
+                            showAchievementNotification();
+                        }
                     }
 
                     lastAcceleration = acceleration;
@@ -189,7 +222,22 @@
             }
         }
 
-        updateTable();
+        function showAchievementNotification() {
+            // Показать уведомление
+            document.getElementById("notification").style.display = "block";
+            document.getElementById("achievementImage").src = achievementImages[currentCategory];
+
+            // Показать push уведомление
+            if (Notification.permission === "granted") {
+                new Notification("Поздравляем! Цель достигнута!");
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === "granted") {
+                        new Notification("Поздравляем! Цель достигнута!");
+                    }
+                });
+            }
+        }
     </script>
 
 </body>
