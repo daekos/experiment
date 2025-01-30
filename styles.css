@@ -1,0 +1,12 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+#step-counter {
+    margin-bottom: 20px;
+}
+
+#goals {
+    margin-top: 20px;
+}
