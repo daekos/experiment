@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шагомер</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Шагомер с целями</h1>
+    <div id="step-counter">
+        <label for="steps">Количество шагов:</label>
+        <input type="number" id="steps" value="0">
+        <button onclick="updateSteps()">Обновить</button>
+        <p>Вы прошли: <span id="total-steps">0</span> шагов.</p>
+    </div>
+
+    <h2>Цели</h2>
+    <div id="goals">
+        <!-- Goals will be dynamically added here -->
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
