@@ -5,89 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Шагомер – Выбор целей</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-        .buttons { margin-bottom: 20px; }
-        button { margin: 5px; padding: 10px; cursor: pointer; border: none; background: #007BFF; color: white; border-radius: 5px; }
-        button:hover { background: #0056b3; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #f4f4f4; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            transition: background 0.5s ease-in-out;
+            color: white;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .buttons {
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            border: none;
+            background: rgba(255, 255, 255, 0.8);
+            color: black;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        table {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.8);
+            color: black;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: black;
+        }
+
+        #steps {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Шагомер – Выбор целей</h1>
-    <div class="buttons">
-        <button onclick="setCategory('real')">Реальные</button>
-        <button onclick="setCategory('book')">Книжные</button>
-        <button onclick="setCategory('myth')">Мифические</button>
-        <button onclick="setCategory('space')">Космические</button>
-        <button onclick="setCategory('nature')">Природные</button>
-    </div>
+    <div class="container">
+        <h1>Шагомер – Выбор целей</h1>
+        <div class="buttons">
+            <button onclick="setCategory('real')">Реальные</button>
+            <button onclick="setCategory('book')">Книжные</button>
+            <button onclick="setCategory('myth')">Мифические</button>
+            <button onclick="setCategory('space')">Космические</button>
+            <button onclick="setCategory('nature')">Природные</button>
+        </div>
 
-    <table id="goalsTable">
-        <thead>
-            <tr>
-                <th>Период</th>
-                <th>Цель</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+        <button onclick="startStepCounter()">Запустить шагомер</button>
+        <p id="steps">Шагов: 0</p>
+
+        <table id="goalsTable">
+            <thead>
+                <tr>
+                    <th>Период</th>
+                    <th>Цель</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <script>
         const goals = {
-            real: {
-                daily: ["10 000 шагов – норма здоровья", "12 000 шагов – активный день", "8 000 шагов – легкая прогулка", "14 000 шагов – пробежка", "11 000 шагов – туристический маршрут", "13 000 шагов – день на природе", "15 000 шагов – как спортсмен"],
-                weekly: ["70 000 шагов – марафон за неделю", "90 000 шагов – активные прогулки", "100 000 шагов – спортивный вызов", "120 000 шагов – максимум активности"],
-                monthly: ["300 000 шагов – путь от Москвы до Твери", "450 000 шагов – маршрут для путешественников", "500 000 шагов – активный месяц", "600 000 шагов – суперфитнес"],
-                yearly: ["5 000 000 шагов – от Петербурга до Байкала", "7 000 000 шагов – эквивалент кругосветки", "8 000 000 шагов – год спорта", "9 000 000 шагов – топ-уровень активности"]
-            },
-            book: {
-                daily: ["6 000 шагов – Фродо идет к Роковой горе", "10 000 шагов – Шерлок по улицам Лондона", "8 000 шагов – Ватсон на прогулке", "12 000 шагов – Жюль Верн в пути", "14 000 шагов – Филеас Фогг спешит"],
-                weekly: ["90 000 шагов – неделя приключений Бильбо", "100 000 шагов – странствия Гекльберри Финна"],
-                monthly: ["450 000 шагов – как кругосветное путешествие капитана Немо"],
-                yearly: ["7 000 000 шагов – как Жюль Верн вокруг света"]
-            },
-            myth: {
-                daily: ["12 000 шагов – следы Персея", "15 000 шагов – путь Геракла", "9 000 шагов – прогулка Афины"],
-                weekly: ["100 000 шагов – лабиринт Минотавра", "120 000 шагов – испытания Одиссея"],
-                monthly: ["500 000 шагов – странствия Геракла"],
-                yearly: ["8 000 000 шагов – марафон Ахиллеса"]
-            },
-            space: {
-                daily: ["8 000 шагов – по палубе «Энтерпрайза»", "12 000 шагов – путешествие по МКС"],
-                weekly: ["120 000 шагов – прогулка по Луне"],
-                monthly: ["600 000 шагов – путь астронавта"],
-                yearly: ["9 000 000 шагов – путь до Марса"]
-            },
-            nature: {
-                daily: ["15 000 шагов – день волка", "14 000 шагов – поход в лес"],
-                weekly: ["150 000 шагов – миграция оленей"],
-                monthly: ["700 000 шагов – путешествие альбатроса"],
-                yearly: ["10 000 000 шагов – путь бабочек монархов"]
-            }
+            real: { daily: ["10 000 шагов – норма здоровья"], weekly: ["70 000 шагов – марафон"], monthly: ["300 000 шагов – Москва-Тверь"], yearly: ["5 000 000 шагов – Петербург-Байкал"] },
+            book: { daily: ["6 000 шагов – Фродо к вулкану"], weekly: ["90 000 шагов – приключения Бильбо"], monthly: ["450 000 шагов – Жюль Верн"], yearly: ["7 000 000 шагов – кругосветка"] },
+            myth: { daily: ["12 000 шагов – Геракл"], weekly: ["100 000 шагов – лабиринт"], monthly: ["500 000 шагов – странствия"], yearly: ["8 000 000 шагов – марафон Ахиллеса"] },
+            space: { daily: ["8 000 шагов – по МКС"], weekly: ["120 000 шагов – по Луне"], monthly: ["600 000 шагов – путь астронавта"], yearly: ["9 000 000 шагов – путь до Марса"] },
+            nature: { daily: ["15 000 шагов – волк"], weekly: ["150 000 шагов – миграция"], monthly: ["700 000 шагов – альбатрос"], yearly: ["10 000 000 шагов – бабочки монархи"] }
+        };
+
+        const backgrounds = {
+            real: "images/real.jpg",
+            book: "images/book.jpg",
+            myth: "images/myth.jpg",
+            space: "images/space.jpg",
+            nature: "images/nature.jpg"
         };
 
         let currentCategory = "real";
+        let stepCount = 0;
 
         function setCategory(category) {
             currentCategory = category;
+            document.body.style.backgroundImage = `url('${backgrounds[category]}')`;
             updateTable();
         }
 
         function getGoalFromArray(arr, interval) {
             const now = new Date();
-            let index;
-            if (interval === "daily") {
-                index = now.getDay();
-            } else if (interval === "weekly") {
-                index = Math.floor(now.getDate() / 7) % arr.length;
-            } else if (interval === "monthly") {
-                index = now.getMonth() % arr.length;
-            } else if (interval === "yearly") {
-                index = now.getFullYear() % arr.length;
-            }
+            let index = interval === "daily" ? now.getDay() :
+                        interval === "weekly" ? Math.floor(now.getDate() / 7) % arr.length :
+                        interval === "monthly" ? now.getMonth() % arr.length :
+                        now.getFullYear() % arr.length;
             return arr[index] || "Нет данных";
         }
 
@@ -108,6 +151,42 @@
                 const row = `<tr><td>${period}</td><td>${goal}</td></tr>`;
                 tableBody.innerHTML += row;
             });
+        }
+
+        function startStepCounter() {
+            if (navigator.permissions) {
+                navigator.permissions.query({ name: "accelerometer" }).then((result) => {
+                    if (result.state === "granted" || result.state === "prompt") {
+                        trackSteps();
+                    } else {
+                        alert("Шагомер отключен в браузере.");
+                    }
+                });
+            } else {
+                trackSteps();
+            }
+        }
+
+        function trackSteps() {
+            let lastAcceleration = { x: 0, y: 0, z: 0 };
+
+            if (window.DeviceMotionEvent) {
+                window.addEventListener("devicemotion", (event) => {
+                    let acceleration = event.accelerationIncludingGravity;
+                    let deltaX = Math.abs(acceleration.x - lastAcceleration.x);
+                    let deltaY = Math.abs(acceleration.y - lastAcceleration.y);
+                    let deltaZ = Math.abs(acceleration.z - lastAcceleration.z);
+
+                    if (deltaX + deltaY + deltaZ > 2) { // Фильтр движений
+                        stepCount++;
+                        document.getElementById("steps").innerText = `Шагов: ${stepCount}`;
+                    }
+
+                    lastAcceleration = acceleration;
+                });
+            } else {
+                alert("Ваш браузер не поддерживает шагомер.");
+            }
         }
 
         updateTable();
