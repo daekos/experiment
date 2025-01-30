@@ -3,23 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Шагомер</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Шагомер – Выбор целей</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        .buttons { margin-bottom: 20px; }
+        button { margin: 5px; padding: 10px; cursor: pointer; border: none; background: #007BFF; color: white; border-radius: 5px; }
+        button:hover { background: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
 </head>
 <body>
-    <h1>Шагомер с целями</h1>
-    <div id="step-counter">
-        <label for="steps">Количество шагов:</label>
-        <input type="number" id="steps" value="0">
-        <button onclick="updateSteps()">Обновить</button>
-        <p>Вы прошли: <span id="total-steps">0</span> шагов.</p>
+
+    <h1>Шагомер – Выбор целей</h1>
+    <div class="buttons">
+        <button onclick="setCategory('real')">Реальные</button>
+        <button onclick="setCategory('book')">Книжные</button>
+        <button onclick="setCategory('myth')">Мифические</button>
+        <button onclick="setCategory('space')">Космические</button>
+        <button onclick="setCategory('nature')">Природные</button>
     </div>
 
-    <h2>Цели</h2>
-    <div id="goals">
-        <!-- Goals will be dynamically added here -->
-    </div>
+    <table id="goalsTable">
+        <thead>
+            <tr>
+                <th>Период</th>
+                <th>Цель</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 
-    <script src="script.js"></script>
+    <script>
+        const goals = {
+            real: {
+                daily: ["10 000 шагов – норма здоровья", "12 000 шагов – активный день", "8 000 шагов – легкая прогулка", "14 000 шагов – пробежка", "11 000 шагов – туристический маршрут", "13 000 шагов – день на природе", "15 000 шагов – как спортсмен"],
+                weekly: ["70 000 шагов – марафон за неделю", "90 000 шагов – активные прогулки", "100 000 шагов – спортивный вызов", "120 000 шагов – максимум активности"],
+                monthly: ["300 000 шагов – путь от Москвы до Твери", "450 000 шагов – маршрут для путешественников", "500 000 шагов – активный месяц", "600 000 шагов – суперфитнес"],
+                yearly: ["5 000 000 шагов – от Петербурга до Байкала", "7 000 000 шагов – эквивалент кругосветки", "8 000 000 шагов – год спорта", "9 000 000 шагов – топ-уровень активности"]
+            },
+            book: {
+                daily: ["6 000 шагов – Фродо идет к Роковой горе", "10 000 шагов – Шерлок по улицам Лондона", "8 000 шагов – Ватсон на прогулке", "12 000 шагов – Жюль Верн в пути", "14 000 шагов – Филеас Фогг спешит"],
+                weekly: ["90 000 шагов – неделя приключений Бильбо", "100 000 шагов – странствия Гекльберри Финна"],
+                monthly: ["450 000 шагов – как кругосветное путешествие капитана Немо"],
+                yearly: ["7 000 000 шагов – как Жюль Верн вокруг света"]
+            },
+            myth: {
+                daily: ["12 000 шагов – следы Персея", "15 000 шагов – путь Геракла", "9 000 шагов – прогулка Афины"],
+                weekly: ["100 000 шагов – лабиринт Минотавра", "120 000 шагов – испытания Одиссея"],
+                monthly: ["500 000 шагов – странствия Геракла"],
+                yearly: ["8 000 000 шагов – марафон Ахиллеса"]
+            },
+            space: {
+                daily: ["8 000 шагов – по палубе «Энтерпрайза»", "12 000 шагов – путешествие по МКС"],
+                weekly: ["120 000 шагов – прогулка по Луне"],
+                monthly: ["600 000 шагов – путь астронавта"],
+                yearly: ["9 000 000 шагов – путь до Марса"]
+            },
+            nature: {
+                daily: ["15 000 шагов – день волка", "14 000 шагов – поход в лес"],
+                weekly: ["150 000 шагов – миграция оленей"],
+                monthly: ["700 000 шагов – путешествие альбатроса"],
+                yearly: ["10 000 000 шагов – путь бабочек монархов"]
+            }
+        };
+
+        let currentCategory = "real";
+
+        function setCategory(category) {
+            currentCategory = category;
+            updateTable();
+        }
+
+        function getGoalFromArray(arr, interval) {
+            const now = new Date();
+            let index;
+            if (interval === "daily") {
+                index = now.getDay();
+            } else if (interval === "weekly") {
+                index = Math.floor(now.getDate() / 7) % arr.length;
+            } else if (interval === "monthly") {
+                index = now.getMonth() % arr.length;
+            } else if (interval === "yearly") {
+                index = now.getFullYear() % arr.length;
+            }
+            return arr[index] || "Нет данных";
+        }
+
+        function updateTable() {
+            const tableBody = document.querySelector("#goalsTable tbody");
+            tableBody.innerHTML = "";
+
+            const selectedGoals = goals[currentCategory];
+
+            const data = [
+                { period: "Дневная", goal: getGoalFromArray(selectedGoals.daily, "daily") },
+                { period: "Недельная", goal: getGoalFromArray(selectedGoals.weekly, "weekly") },
+                { period: "Месячная", goal: getGoalFromArray(selectedGoals.monthly, "monthly") },
+                { period: "Годовая", goal: getGoalFromArray(selectedGoals.yearly, "yearly") },
+            ];
+
+            data.forEach(({ period, goal }) => {
+                const row = `<tr><td>${period}</td><td>${goal}</td></tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        updateTable();
+    </script>
+
 </body>
 </html>
